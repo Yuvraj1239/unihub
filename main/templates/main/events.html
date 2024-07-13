@@ -1,0 +1,73 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% load replace_space %}
+
+{% block title %}
+Events
+{% endblock %}
+
+{% block content %}
+    <header class="mt-5 pt-5">
+        <div class="container w-75 mx-auto shadow-lg p-4 my-4 rounded-3">
+            <p class="h5 text-center text-black">
+                Explore from our pool of events and find the ones that interest you!
+            </p>
+        </div>
+    </header>
+
+    <section class="container mt-5">
+        <form method="get" class="my-5 search_form">
+            {% csrf_token %}
+            <p>
+                <label for="category">Category:</label>
+                {{ filter.form.category }}
+            </p>
+            <p>
+                <label for="title">Title:</label>
+                {{ filter.form.title }}
+            </p>
+            <p>
+                <label for="location">Location:</label>
+                {{ filter.form.location }}
+            </p>
+            <button type="submit" class="btn-change btn">Search</button>
+        </form>
+        <div class="events row">
+            {% for event in page_obj %}
+                <div class="col-md-4">
+                    <div class="card">
+                        <img class="card-img-top" src="{{ event.image.url }}" alt="{{ event.title }}">
+                        <div class="card-body">
+                            <h4 class="card-title">{{ event.title }} | {{ event.date }} | {{ event.start_time }}</h4>
+                            <p class="text-muted">{{ event.location }}</p>
+                            <p
+                                    class="card-text w-75 overflow-hidden"
+                                    style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;"
+                            >
+                                {{ event.description }}
+                            </p>
+                            <a href="{% url 'event_detail' event.id %}" class="btn btn-primary">View Event</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            <div class="pagination mt-5">
+                <span class="step-links">
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1" class="d-inline btn btn-outline-change">&laquo; first</a>
+                        <a href="?page={{ page_obj.previous_page_number }}" class="d-inline btn btn-outline-change">previous</a>
+                    {% endif %}
+
+                    <span class="current">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                    </span>
+
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}" class="d-inline btn btn-outline-change">next</a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}" class="d-inline btn btn-outline-change">last &raquo;</a>
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+    </section>
+{% endblock content %}
