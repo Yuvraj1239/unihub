@@ -1,0 +1,12 @@
+{% extends 'events/base_layout.html' %}
+
+{% block content %}
+    <h1>Signup</h1>
+    <p>this is the page shoeing fault</p>
+    <form class="site-form" action="/accounts/signup/" method="post">
+        <p>hello</p>
+        {% csrf_token %}
+        {{form.as_p}}
+        <input type="submit" value="Signup">
+    </form>
+{% endblock %}
